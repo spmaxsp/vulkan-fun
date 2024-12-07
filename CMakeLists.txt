@@ -26,6 +26,11 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 #################### LIBRARIES ####################
 
+### include spdlog
+add_subdirectory(libs/spdlog)
+find_package(spdlog REQUIRED)
+target_link_libraries(${PROJECT_NAME} spdlog)
+
 ### include imgui
 #set(IMGUI_FILES libs/imgui/imgui.cpp libs/imgui/imgui_demo.cpp libs/imgui/imgui_draw.cpp libs/imgui/imgui_tables.cpp libs/imgui/imgui_widgets.cpp libs/imgui/backends/imgui_impl_sdl2.cpp libs/imgui/backends/imgui_impl_vulkan.cpp)
 #target_sources(${PROJECT_NAME} PRIVATE ${IMGUI_FILES})

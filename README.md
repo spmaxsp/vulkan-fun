@@ -13,5 +13,10 @@ Im also trying documenting my progress including some notes below.
 
 - The Project requires SDL2 and the Vulkan SDK. (on arch the vulkan sdk is available in `vulkan-devel`)
 - The Cmake locates both using the `find_package` command.
+- As logger the spdlog library is used. It is included as a submodule in the project.
+
+### 2. Creating the SDL Window
+
+
 
 
