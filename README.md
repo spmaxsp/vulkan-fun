@@ -18,6 +18,13 @@ Im also trying documenting my progress including some notes below.
 
 ### 2. Creating the SDL Window
 
+- Define `SDL_MAIN_HANDLED` to prevent SDL from overwriting the existing main function
+- Include the SDL2 headers 
+- Initialize the SDL Instance (`SDL_Init()`)
+- Create the SDL-Window Instance (supplying the Name, Position, Size, Flags) (`SDL_CreateWindow()`)
+- Create a main loop to check for events (`SDL_PollEvent()`)
+- Cleanup the SDL Instance (`SDL_DestroyWindow()` and `SDL_Quit()`)
+
 
 
 
