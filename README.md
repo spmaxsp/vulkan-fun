@@ -18,12 +18,19 @@ Im also trying documenting my progress including some notes below.
 
 ### 2. Creating the SDL Window
 
-- Define `SDL_MAIN_HANDLED` to prevent SDL from overwriting the existing main function
-- Include the SDL2 headers 
-- Initialize the SDL Instance (`SDL_Init()`)
+- `SDL_MAIN_HANDLED` is defined to prevent SDL from overwriting the existing main function
+- The SDL Instance is initialized (`SDL_Init()`)
 - Create the SDL-Window Instance (supplying the Name, Position, Size, Flags) (`SDL_CreateWindow()`)
 - Create a main loop to check for events (`SDL_PollEvent()`)
 - Cleanup the SDL Instance (`SDL_DestroyWindow()` and `SDL_Quit()`)
+
+### 3. Vulkan Instance
+
+- A Vulkan Instance is created using the `vkCreateInstance()` function
+- Parameters for the creation are supplied via  `VkInstanceCreateInfo` and `VkApplicationInfo`
+- The instance is stored in the `VulkanContext` struct
+- The context can be used over the whole application to access vulkan functions
+
 
 
 

@@ -16,6 +16,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin")
 ### set source files
 set(SOURCE_FILES 
     src/main.cpp                            ### main file
+    src/vulkan_base/vulkan_device.cpp
 )
 
 ####################  EXECUTABLE  ####################

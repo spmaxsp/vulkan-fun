@@ -4,6 +4,8 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/basic_file_sink.h"
 
+#include "vulkan_base/vulkan_base.h"
+
 
 bool handleMessage() {
     SDL_Event event;
@@ -38,9 +40,12 @@ int main() {
         spdlog::error("Error creating SDL window");
     }
 
+    spdlog::info("initializing Vulkan");
+    VulkanContext* context = initVulkan();
+
     // Run the Mainloop and check for SDL-Events
     while (handleMessage()) {
-        
+
     }
 
     // Destroy Window and exit SDL
