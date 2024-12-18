@@ -32,6 +32,15 @@ Im also trying documenting my progress including some notes below.
 - The context can be used over the whole application to access vulkan functions
 
 
+### 4. Layers and Extensions
+
+- Layers and Extensions are queried using `vkEnumerateInstanceLayerProperties()` and `vkEnumerateInstanceExtensionProperties()`
+- The available layers and extensions are printed to the console
+- The `VK_LAYER_KHRONOS_validation` layer is enabled for debugging purposes
+- The `VK_KHR_surface` and `VK_KHR_***_surface` extensions allow drawing to the window surface (SDL tells which one to use `SDL_Vulkan_GetInstanceExtensions()`)
+- If all required extensions and layers are available is checked before creating the instance
+
+
 
 
 

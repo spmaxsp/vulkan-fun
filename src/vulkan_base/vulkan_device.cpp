@@ -31,21 +31,59 @@ bool checkLayerSupport(std::vector<const char*> requiredLayers) {
             return false;
         }
     }
+    
     return true;
-
 }
 
 
-bool initVulkanInstance(VulkanContext* context) {
+bool checkExtensionSupport(std::vector<const char*> requiredExtensions) {
+
+    // Get list of available extensions
+    uint32_t extensionCount;
+    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+    std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, availableExtensions.data());
+
+    // Log the available extensions
+    spdlog::info("Available extensions:");
+    for (const auto& extension : availableExtensions) {
+        spdlog::info(" - \"{0}\"", extension.extensionName);
+    } 
+
+    // check if all requested extensions are available
+    for (const char* requiredExtension : requiredExtensions) {
+        bool extensionFound = false;
+        for (const auto& extension : availableExtensions) {
+            if (strcmp(requiredExtension, extension.extensionName) == 0) {
+                spdlog::info("Extension \"{0}\" found", requiredExtension);
+                extensionFound = true;
+                break;
+            }
+        }
+        if (!extensionFound) {
+            spdlog::error("Extension \"{0}\" not found", requiredExtension);
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+
+bool initVulkanInstance(VulkanContext* context, std::vector<const char*> requiredLayers, std::vector<const char*> requiredExtensions) {
 
     // check layer support
-    const std::vector<const char*> validationLayers = {
-        "VK_LAYER_KHRONOS_validation"
-    };
-    if (!checkLayerSupport(validationLayers)) {
-        spdlog::info("Validation layers requested, but not available!");
+    if (!checkLayerSupport(requiredLayers)) {
+        spdlog::info("Layers requested, but not available!");
         return false;
     }
+
+    // check extension support
+    if (!checkExtensionSupport(requiredExtensions)) {
+        spdlog::info("Extensions requested, but not available!");
+        return false;
+    }
+
 
     // specify application information
     VkApplicationInfo applicationInfo = {VK_STRUCTURE_TYPE_APPLICATION_INFO};
@@ -56,10 +94,10 @@ bool initVulkanInstance(VulkanContext* context) {
     // parameters for creating the VkInstance
     VkInstanceCreateInfo createInfo = {VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
     createInfo.pApplicationInfo = &applicationInfo;
-    createInfo.enabledLayerCount = 0;
-    createInfo.ppEnabledLayerNames = nullptr;
-    createInfo.enabledExtensionCount = 0;
-    createInfo.ppEnabledExtensionNames = nullptr;
+    createInfo.enabledLayerCount = static_cast<uint32_t>(requiredLayers.size());
+    createInfo.ppEnabledLayerNames = requiredLayers.data();
+    createInfo.enabledExtensionCount = static_cast<uint32_t>(requiredExtensions.size());
+    createInfo.ppEnabledExtensionNames = requiredExtensions.data();
 
     // create a new Vulkan instance using the supplied information
     spdlog::info("creating Vulkan instance");
@@ -72,11 +110,11 @@ bool initVulkanInstance(VulkanContext* context) {
 }
 
 
-VulkanContext* initVulkan() {
+VulkanContext* initVulkan(std::vector<const char*> requiredLayers, std::vector<const char*> requiredExtensions) {
     VulkanContext* context = new VulkanContext;
 
     // create the Vulkan instance
-    if (initVulkanInstance(context)) {
+    if (initVulkanInstance(context, requiredLayers, requiredExtensions)) {
         return 0;
     }
 

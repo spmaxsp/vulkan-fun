@@ -1,5 +1,6 @@
 #define SDL_MAIN_HANDLED   //workaround, to prevent SDL from overwriting our existing main function
 #include <SDL.h>
+#include <SDL_vulkan.h>
 
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/basic_file_sink.h"
@@ -41,7 +42,17 @@ int main() {
     }
 
     spdlog::info("initializing Vulkan");
-    VulkanContext* context = initVulkan();
+
+    const std::vector<const char*> requiredLayers = {
+        "VK_LAYER_KHRONOS_validation"
+    };
+
+    u_int32_t requiredSDLExtensionCount = 0;
+    SDL_Vulkan_GetInstanceExtensions(window, &requiredSDLExtensionCount, nullptr);
+    std::vector<const char*> requiredExtensions(requiredSDLExtensionCount);
+    SDL_Vulkan_GetInstanceExtensions(window, &requiredSDLExtensionCount, requiredExtensions.data());
+
+    VulkanContext* context = initVulkan(requiredLayers, requiredExtensions);
 
     // Run the Mainloop and check for SDL-Events
     while (handleMessage()) {

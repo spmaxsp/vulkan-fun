@@ -3,9 +3,14 @@
 
 #include <vulkan/vulkan.h>
 
+#include <cassert>
+
+
+#define ASSERT_VULKAN(x) if(x != VK_SUCCESS) {assert(false);}
+
 
 struct VulkanContext {
     VkInstance instance;   // connection to the vulkan Instance
 };
 
-VulkanContext* initVulkan();
+VulkanContext* initVulkan(std::vector<const char*> requiredLayers, std::vector<const char*> requiredExtensions);    
