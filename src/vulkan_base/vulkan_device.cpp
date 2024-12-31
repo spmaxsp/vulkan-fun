@@ -10,10 +10,10 @@ bool checkLayerSupport(std::vector<const char*> requiredLayers) {
     vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
     // Log the available layers
-    spdlog::info("Available layers:");
+    spdlog::debug("Available layers:");
     for (const auto& layer : availableLayers) {
-        spdlog::info(" - \"{0}\"", layer.layerName);
-        spdlog::info("        {0}", layer.description);
+        spdlog::debug(" - \"{0}\"", layer.layerName);
+        spdlog::debug("        {0}", layer.description);
     } 
 
     // check if all requested layers are available
@@ -45,9 +45,9 @@ bool checkExtensionSupport(std::vector<const char*> requiredExtensions) {
     vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, availableExtensions.data());
 
     // Log the available extensions
-    spdlog::info("Available extensions:");
+    spdlog::debug("Available extensions:");
     for (const auto& extension : availableExtensions) {
-        spdlog::info(" - \"{0}\"", extension.extensionName);
+        spdlog::debug(" - \"{0}\"", extension.extensionName);
     } 
 
     // check if all requested extensions are available
@@ -119,4 +119,21 @@ VulkanContext* initVulkan(std::vector<const char*> requiredLayers, std::vector<c
     }
 
     return context;
+}
+
+void destroyVulkan(VulkanContext** context) {
+
+    if (context == nullptr) {
+        return;
+    }
+
+    if ((*context) == nullptr) {
+        return;
+    }
+
+    spdlog::info("destroying Vulkan instance");
+    vkDestroyInstance((*context)->instance, nullptr);
+
+    delete (*context);
+    *context = nullptr;
 }

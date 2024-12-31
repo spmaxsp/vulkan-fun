@@ -26,6 +26,9 @@ bool handleMessage() {
 
 
 int main() {
+
+    // Setup the Loglevel 
+    spdlog::set_level(spdlog::level::debug);
     
     // Initialize the SDL Instance
     spdlog::info("initializing SDL");
@@ -41,17 +44,20 @@ int main() {
         spdlog::error("Error creating SDL window");
     }
 
-    spdlog::info("initializing Vulkan");
-
+    
+    // Defining the required Layers
     const std::vector<const char*> requiredLayers = {
         "VK_LAYER_KHRONOS_validation"
     };
 
+    // Geting required Extensions from SDL
     u_int32_t requiredSDLExtensionCount = 0;
     SDL_Vulkan_GetInstanceExtensions(window, &requiredSDLExtensionCount, nullptr);
     std::vector<const char*> requiredExtensions(requiredSDLExtensionCount);
     SDL_Vulkan_GetInstanceExtensions(window, &requiredSDLExtensionCount, requiredExtensions.data());
 
+    // Initializing Vulkan
+    spdlog::info("initializing Vulkan");
     VulkanContext* context = initVulkan(requiredLayers, requiredExtensions);
 
     // Run the Mainloop and check for SDL-Events
@@ -61,6 +67,7 @@ int main() {
 
     // Destroy Window and exit SDL
     spdlog::info("cleaning up SDL");
+    destroyVulkan(&context);
     SDL_DestroyWindow(window);
     SDL_Quit();
     

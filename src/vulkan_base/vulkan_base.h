@@ -14,3 +14,4 @@ struct VulkanContext {
 };
 
 VulkanContext* initVulkan(std::vector<const char*> requiredLayers, std::vector<const char*> requiredExtensions);    
+void destroyVulkan(VulkanContext** context);  
