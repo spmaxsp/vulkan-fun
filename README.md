@@ -45,6 +45,15 @@ The Layers are mostly to add debugging functionality and the Extensions are used
 - If all required extensions and layers are available is checked before creating the instance
 
 
+### 4. Physical Devices
+The Physical Devices represent the actual hardware that is used to run the Vulkan Application.
+
+- Physical Devices are queried using `vkEnumeratePhysicalDevices()`
+- The available devices are printed to the console
+- The first device is selected and stored in the `VulkanContext` struct
+- The device properties are stored in the `VulkanContext` struct as well
+
+
 
 
 

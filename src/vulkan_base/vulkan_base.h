@@ -11,7 +11,9 @@
 
 struct VulkanContext {
     VkInstance instance;   // connection to the vulkan Instance
+    VkPhysicalDevice physicalDevice;
+    VkPhysicalDeviceProperties physicalDeviceProperties;
 };
 
-VulkanContext* initVulkan(std::vector<const char*> requiredLayers, std::vector<const char*> requiredExtensions);    
+VulkanContext* initVulkan(std::vector<const char*> requiredLayers, std::vector<const char*> requiredExtensions);  
 void destroyVulkan(VulkanContext** context);  

@@ -70,6 +70,41 @@ bool checkExtensionSupport(std::vector<const char*> requiredExtensions) {
 }
 
 
+bool selectPhysicalDevice(VulkanContext* context) {
+
+    // Get the number of available Devices
+    uint32_t numDevices = 0;
+    vkEnumeratePhysicalDevices(context->instance, &numDevices, nullptr);
+
+    // Check if devices were found
+    if (numDevices == 0) {
+        spdlog::error("No compatible Vulkan Devices were found");
+        context->physicalDevice = nullptr;
+        return false;
+    }
+
+    // Get the list of Devices
+    std::vector<VkPhysicalDevice> physicalDevices(numDevices);
+    vkEnumeratePhysicalDevices(context->instance, &numDevices, physicalDevices.data());
+
+    // Log the available devices
+    spdlog::debug("Available devices:");
+    for (const auto& device : physicalDevices) {
+        VkPhysicalDeviceProperties deviceProperties;
+        vkGetPhysicalDeviceProperties(device, &deviceProperties);
+        spdlog::debug(" - \"{0}\"", deviceProperties.deviceName);
+    }
+
+    // Select the first device
+    context->physicalDevice = physicalDevices[0];
+    vkGetPhysicalDeviceProperties(context->physicalDevice, &context->physicalDeviceProperties);
+    spdlog::info("Selected device: \"{0}\"", context->physicalDeviceProperties.deviceName);
+
+
+    return true;
+}
+
+
 bool initVulkanInstance(VulkanContext* context, std::vector<const char*> requiredLayers, std::vector<const char*> requiredExtensions) {
 
     // check layer support
@@ -114,8 +149,13 @@ VulkanContext* initVulkan(std::vector<const char*> requiredLayers, std::vector<c
     VulkanContext* context = new VulkanContext;
 
     // create the Vulkan instance
-    if (initVulkanInstance(context, requiredLayers, requiredExtensions)) {
-        return 0;
+    if (!initVulkanInstance(context, requiredLayers, requiredExtensions)) {
+        return nullptr;
+    }
+
+    // create the Vulkan instance
+    if (!selectPhysicalDevice(context)) {
+        return nullptr;
     }
 
     return context;
